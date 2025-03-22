@@ -1,3 +1,4 @@
+import os
 """
 Django settings for backend2 project.
 
@@ -117,7 +118,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = "static/"
+
+STATIC_URL = '/static/'
+MEDIA_URL = '/images/' # to load media files on admin page as well (changes in url.py file also, project level)
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),] # new
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
