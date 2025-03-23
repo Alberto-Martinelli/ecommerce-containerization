@@ -23,6 +23,12 @@ import {
 
 import axios from 'axios'
 
+// User API (Backend on Port 8000)
+const userAPI = axios.create({
+    baseURL: 'http://localhost:8000',
+    headers: { 'Content-Type': 'application/json' }
+});
+
 // create card
 export const createCard = (cardData) => async (dispatch, getState) => {
 
@@ -45,7 +51,7 @@ export const createCard = (cardData) => async (dispatch, getState) => {
         }
 
         // api call
-        const { data } = await axios.post(
+        const { data } = await userAPI.post(
             "/payments/create-card/",
             {
                 'email': cardData.email,
@@ -93,7 +99,7 @@ export const chargeCustomer = (cardData) => async (dispatch, getState) => {
         }
 
         // api call
-        const { data } = await axios.post(
+        const { data } = await userAPI.post(
             "/payments/charge-customer/",
             cardData,
             config
@@ -133,7 +139,7 @@ export const savedCardsList = () => async (dispatch, getState) => {
         }
 
         // api call
-        const { data } = await axios.get('/account/stripe-cards/', config)
+        const { data } = await userAPI.get('/account/stripe-cards/', config)
 
         dispatch({
             type: SAVED_CARDS_LIST_SUCCESS,
@@ -170,7 +176,7 @@ export const updateStripeCard = (cardData) => async (dispatch, getState) => {
         }
 
         // api call
-        const { data } = await axios.post(
+        const { data } = await userAPI.post(
             "/payments/update-card/",
             cardData,
             config
@@ -211,7 +217,7 @@ export const deleteSavedCard = (card_number) => async (dispatch, getState) => {
         }
 
         // api call
-        const { data } = await axios.post(
+        const { data } = await userAPI.post(
             '/payments/delete-card/',
             { "card_number": card_number },
             config

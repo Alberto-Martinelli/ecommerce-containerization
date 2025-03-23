@@ -28,6 +28,12 @@ import {
 import axios from 'axios'
 
 
+// Product API (Backend on Port 8001)
+const productAPI = axios.create({
+    baseURL: 'http://localhost:8001',
+    headers: { 'Content-Type': 'application/json' }
+});
+
 // products list
 export const getProductsList = () => async (dispatch) => {
     try {
@@ -36,7 +42,7 @@ export const getProductsList = () => async (dispatch) => {
         })
 
         // call api
-        const { data } = await axios.get("/api/products/")
+        const { data } = await productAPI.get("/api/products/")
 
         dispatch({
             type: PRODUCTS_LIST_SUCCESS,
@@ -59,7 +65,7 @@ export const getProductDetails = (id) => async (dispatch) => {
         })
 
         // call api
-        const { data } = await axios.get(`/api/product/${id}/`)
+        const { data } = await productAPI.get(`/api/product/${id}/`)
 
         dispatch({
             type: PRODUCT_DETAILS_SUCCESS,
@@ -95,7 +101,7 @@ export const createProduct = (product) => async (dispatch, getState) => {
         }
 
         // api call
-        const { data } = await axios.post(
+        const { data } = await productAPI.post(
             "/api/product-create/",
             product,
             config
@@ -133,7 +139,7 @@ export const deleteProduct = (id) => async (dispatch, getState) => {
         }
 
         // api call
-        const { data } = await axios.delete(
+        const { data } = await productAPI.delete(
             `/api/product-delete/${id}/`,
             config
         )
@@ -172,7 +178,7 @@ export const updateProduct = (id, product) => async (dispatch, getState) => {
         }
 
         // api call
-        const { data } = await axios.put(
+        const { data } = await productAPI.put(
             `/api/product-update/${id}/`,
             product,
             config
@@ -213,7 +219,7 @@ export const changeDeliveryStatus = (id, product) => async (dispatch, getState) 
         }
 
         // api call
-        const { data } = await axios.put(
+        const { data } = await productAPI.put(
             `/account/change-order-status/${id}/`,
             product,
             config

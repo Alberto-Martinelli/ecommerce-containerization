@@ -47,10 +47,6 @@ services:
             python manage.py loaddata account/fixtures/account_stripemodel.json && 
             python manage.py runserver 0.0.0.0:8000"
 
-
-# python manage.py loaddata account/fixtures/account_ordermodel.json &&
-# python manage.py loaddata account/fixtures/account_stripemodel.json &&  
-
 volumes:
   postgres_data1:
 

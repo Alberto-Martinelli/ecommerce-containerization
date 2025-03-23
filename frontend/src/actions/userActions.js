@@ -54,6 +54,12 @@ import {
 
 import axios from 'axios'
 
+// User API (Backend on Port 8000)
+const userAPI = axios.create({
+    baseURL: 'http://localhost:8000',
+    headers: { 'Content-Type': 'application/json' }
+});
+
 // Login
 export const login = (username, password) => async (dispatch) => {
     try {
@@ -67,7 +73,7 @@ export const login = (username, password) => async (dispatch) => {
             }
         }
 
-        const { data } = await axios.post(
+        const { data } = await userAPI.post(
             '/account/login/',
             { 'username': username, 'password': password },
             config
@@ -111,7 +117,7 @@ export const register = (username, email, password) => async (dispatch) => {
             }
         }
 
-        const { data } = await axios.post(`/account/register/`,
+        const { data } = await userAPI.post(`/account/register/`,
             { 'username': username, 'email': email, 'password': password },
             config
         )
@@ -156,7 +162,7 @@ export const checkTokenValidation = () => async (dispatch, getState) => {
         }
 
         // call api
-        const { data } = await axios.get("/payments/check-token/", config)
+        const { data } = await userAPI.get("/payments/check-token/", config)
 
         dispatch({
             type: CHECK_TOKEN_VALID_SUCCESS,
@@ -194,7 +200,7 @@ export const userDetails = (id) => async (dispatch, getState) => {
         }
 
         // call api
-        const { data } = await axios.get(`/account/user/${id}`, config)
+        const { data } = await userAPI.get(`/account/user/${id}`, config)
 
         dispatch({
             type: USER_DETAILS_SUCCESS,
@@ -230,7 +236,7 @@ export const userUpdateDetails = (userData) => async (dispatch, getState) => {
         }
 
         // call api
-        const { data } = await axios.put(
+        const { data } = await userAPI.put(
             `/account/user_update/${userInfo.id}/`,
             {
                 "username": userData.username,
@@ -275,7 +281,7 @@ export const userAccountDelete = (userData) => async (dispatch, getState) => {
         }
 
         // call api
-        const { data } = await axios.post(
+        const { data } = await userAPI.post(
             `/account/user_delete/${userData.id}/`,
             {
                 "password": userData.password
@@ -316,7 +322,7 @@ export const getAllAddress = () => async (dispatch, getState) => {
         }
 
         // call api
-        const { data } = await axios.get(
+        const { data } = await userAPI.get(
             "/account/all-address-details/",
             config
         )
@@ -354,7 +360,7 @@ export const getSingleAddress = (id) => async (dispatch, getState) => {
         }
 
         // call api
-        const { data } = await axios.get(
+        const { data } = await userAPI.get(
             `/account/address-details/${id}/`,
             config
         )
@@ -393,7 +399,7 @@ export const createUserAddress = (addressData) => async (dispatch, getState) => 
         }
 
         // call api
-        const { data } = await axios.post(
+        const { data } = await userAPI.post(
             "/account/create-address/",
             addressData,
             config
@@ -432,7 +438,7 @@ export const updateUserAddress = (id, addressData) => async (dispatch, getState)
         }
 
         // call api
-        const { data } = await axios.put(
+        const { data } = await userAPI.put(
             `/account/update-address/${id}/`,
             addressData,
             config
@@ -471,7 +477,7 @@ export const deleteUserAddress = (id) => async (dispatch, getState) => {
         }
 
         // call api
-        const { data } = await axios.delete(
+        const { data } = await userAPI.delete(
             `/account/delete-address/${id}/`,
             config
         )
@@ -508,7 +514,7 @@ export const getAllOrders = () => async (dispatch, getState) => {
         }
 
         // call api
-        const { data } = await axios.get(
+        const { data } = await userAPI.get(
             `/account/all-orders-list/`,
             config
         )
