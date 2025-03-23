@@ -37,7 +37,7 @@ services:
     networks:
       - network1
       - network3
-    command: >
+    command: >  # This is what the container 'backend1' will execute when it starts
       sh -c "python manage.py makemigrations &&
             python manage.py migrate &&
             python manage.py loaddata account/fixtures/account_billingaddress.json &&
