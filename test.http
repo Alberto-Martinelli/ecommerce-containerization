@@ -1,5 +1,5 @@
 # Testing BACKEND2 
-GET http://127.0.0.1:8000/api/products/
+GET http://127.0.0.1:8001/api/products/
 ###
 # Testing BACKEND1
 GET http://127.0.0.1:8000/admin/

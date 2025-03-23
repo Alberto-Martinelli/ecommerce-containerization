@@ -1,0 +1,88 @@
+version: '3.8'
+
+services:
+  db1:
+    image: postgres:15
+    container_name: postgres_db1
+    restart: always
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      - postgres_data1:/var/lib/postgresql/data
+    networks:
+      - network1
+    # ports: 
+    #   - "5432:5432"
+
+  backend1:
+    build:
+      context: ./backend1/
+      dockerfile: Dockerfile.backend1
+    container_name: backend1
+    restart: always
+    depends_on:
+      - db1
+    environment:
+      DATABASE_NAME: mydatabase
+      DATABASE_USER: myuser
+      DATABASE_PASSWORD: mypassword
+      DATABASE_HOST: db1
+      DATABASE_PORT: 5432
+    ports:
+      - "8000:8000"
+    networks:
+      - network1
+    command: >
+      sh -c "python manage.py makemigrations &&
+            python manage.py migrate &&
+            python manage.py loaddata account/fixtures/account_billingaddress.json &&
+            python manage.py loaddata account/fixtures/account_ordermodel.json &&
+            python manage.py loaddata account/fixtures/account_stripemodel.json &&
+            python manage.py runserver 0.0.0.0:8000"
+
+  db2:
+    image: postgres:15
+    container_name: postgres_db2
+    restart: always
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      - postgres_data2:/var/lib/postgresql/data
+    networks:
+      - network2
+
+  backend2:
+    build:
+      context: ./backend2/
+      dockerfile: Dockerfile.backend2
+    container_name: backend2
+    restart: always
+    depends_on:
+      - db2
+    environment:
+      DATABASE_NAME: mydatabase
+      DATABASE_USER: myuser
+      DATABASE_PASSWORD: mypassword
+      DATABASE_HOST: db2
+      DATABASE_PORT: 5432
+    ports:
+      - "8001:8000"  # Avoiding port conflict with backend1
+    networks:
+      - network2
+    command: >
+      sh -c "python manage.py makemigrations &&
+            python manage.py migrate &&
+            python manage.py loaddata product/fixtures/initial_data.json &&
+            python manage.py runserver 0.0.0.0:8000"
+
+volumes:
+  postgres_data1:
+  postgres_data2:
+
+networks:
+  network1:
+  network2:

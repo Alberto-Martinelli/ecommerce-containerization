@@ -15,8 +15,8 @@ services:
       - postgres_data1:/var/lib/postgresql/data
     networks:
       - network1
-    ports: # FOR DEBUGGING
-      - "5432:5432"
+    # ports: # FOR DEBUGGING
+    #   - "5432:5432"
 
   backend1:
     build:
