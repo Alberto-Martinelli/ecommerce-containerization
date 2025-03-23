@@ -1,0 +1,41 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  IMAGE_NAME_BACKEND1: $CI_REGISTRY_USER/backend1
+  IMAGE_NAME_BACKEND2: $CI_REGISTRY_USER/backend2
+  IMAGE_NAME_FRONTEND: $CI_REGISTRY_USER/frontend
+
+build_backend1:
+  stage: build
+  image: gcr.io/kaniko-project/executor:v1.9.0-debug
+  script:
+    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf\"%s:%s\" \"${CI_REGISTRY_USER}\" \"${CI_REGISTRY_PASSWORD}\" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor --context $CI_PROJECT_DIR/backend1 --dockerfile $CI_PROJECT_DIR/backend1/Dockerfile.backend1 --destination $IMAGE_NAME_BACKEND1:$CI_COMMIT_TAG
+
+build_backend2:
+  stage: build
+  image: gcr.io/kaniko-project/executor:v1.9.0-debug
+  script:
+    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf\"%s:%s\" \"${CI_REGISTRY_USER}\" \"${CI_REGISTRY_PASSWORD}\" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor --context $CI_PROJECT_DIR/backend2 --dockerfile $CI_PROJECT_DIR/backend2/Dockerfile.backend2 --destination $IMAGE_NAME_BACKEND2:$CI_COMMIT_TAG
+
+build_frontend:
+  stage: build
+  image: gcr.io/kaniko-project/executor:v1.9.0-debug
+  script:
+    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf\"%s:%s\" \"${CI_REGISTRY_USER}\" \"${CI_REGISTRY_PASSWORD}\" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
+    - /kaniko/executor --context $CI_PROJECT_DIR/frontend --dockerfile $CI_PROJECT_DIR/frontend/Dockerfile.frontend --destination $IMAGE_NAME_FRONTEND:$CI_COMMIT_TAG
+
+deploy:
+  stage: deploy
+  script:
+    - echo "$CI_REGISTRY_USER/backend1" > image.txt
+    - echo "$CI_REGISTRY_USER/backend2" >> image.txt
+    - echo "$CI_REGISTRY_USER/frontend" >> image.txt
+  artifacts:
+    paths:
+      - image.txt
+  only:
+    - tags
