@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  db1:
+    image: postgres:15
+    container_name: postgres_db1
+    restart: always
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      # map the named volume postgres_data1 (in your host machine) to the /var/lib/postgresql/data (inside the container)
+      # postgres_data1 is also the NAME of the volume
+      - postgres_data1:/var/lib/postgresql/data
+    networks:
+      - network1
+    ports: # FOR DEBUGGING
+      - "5432:5432"
+
+  backend1:
+    build:
+      context: ./backend1/  # Specify the directory, NOT the file
+      dockerfile: Dockerfile.backend1  # Specify the Dockerfile separately
+    container_name: backend1
+    restart: always
+    depends_on:
+      - db1 # starts the DB service before starting the server
+    environment:
+      DATABASE_NAME: mydatabase
+      DATABASE_USER: myuser
+      DATABASE_PASSWORD: mypassword
+      DATABASE_HOST: db1
+      DATABASE_PORT: 5432
+    # volumes:
+    #   - .:/app
+    ports:
+      - "8000:8000"
+    networks:
+      - network1
+    # command: /bin/bash # FOR DEBUGGING
+    command: > # This is what the container 'backend1' will execute when it starts
+      sh -c "python manage.py makemigrations &&
+            python manage.py migrate &&
+            python manage.py loaddata account/fixtures/account_billingaddress.json &&
+            python manage.py loaddata account/fixtures/account_ordermodel.json &&
+            python manage.py loaddata account/fixtures/account_stripemodel.json && 
+            python manage.py runserver 0.0.0.0:8000"
+
+
+# python manage.py loaddata account/fixtures/account_ordermodel.json &&
+# python manage.py loaddata account/fixtures/account_stripemodel.json &&  
+
+volumes:
+  postgres_data1:
+
+networks:
+  network1:

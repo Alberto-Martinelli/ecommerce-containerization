@@ -10,7 +10,9 @@ services:
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      # map the named volume postgres_data2 (in your host machine) to the /var/lib/postgresql/data (inside the container)
+      # postgres_data2 is also the NAME of the volume
+      - postgres_data2:/var/lib/postgresql/data
     networks:
       - network2
     # ports: # FOR DEBUGGING
@@ -45,7 +47,7 @@ services:
 
 
 volumes:
-  postgres_data:
+  postgres_data2:
 
 networks:
   network2:
