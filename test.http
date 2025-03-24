@@ -1,6 +1,8 @@
 # Testing BACKEND2 
 GET http://127.0.0.1:8001/api/products/
 ###
+GET http://127.0.0.1:8001/api/product/2
+###
 # Testing BACKEND1
 GET http://127.0.0.1:8000/admin/
 

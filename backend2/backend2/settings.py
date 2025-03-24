@@ -140,7 +140,7 @@ MEDIA_URL = '/images/' # to load media files on admin page as well (changes in u
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),] # new
-
+MEDIA_ROOT = 'static/images'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
