@@ -3,44 +3,62 @@ stages:
   - deploy
 
 variables:
-  IMAGE_BACKEND1: "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/backend1"
-  IMAGE_BACKEND2: "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/backend2"
-  IMAGE_FRONTEND: "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/frontend"
-  IMAGE_DB1: "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/postgres_db1"
-  IMAGE_DB2: "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/postgres_db2"
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_DRIVER: overlay2
+  IMAGE_NAME_BACKEND1: $CI_REGISTRY/$CI_PROJECT_NAME/backend1
+  IMAGE_NAME_BACKEND2: $CI_REGISTRY/$CI_PROJECT_NAME/backend2
+  IMAGE_NAME_FRONTEND: $CI_REGISTRY/$CI_PROJECT_NAME/frontend
+
+services:
+  - docker:dind
 
 before_script:
-  - echo "Logging in to GitLab Container Registry"
-  - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+  - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
 
 build_backend1:
   stage: build
-  image: gcr.io/kaniko-project/executor:v1.9.0-debug
+  image: docker:latest
   script:
-    - /kaniko/executor --context $CI_PROJECT_DIR/backend1 --dockerfile $CI_PROJECT_DIR/backend1/Dockerfile.backend1 --destination $IMAGE_BACKEND1:$CI_COMMIT_REF_SLUG
+    - docker build -t $IMAGE_NAME_BACKEND1:$CI_COMMIT_TAG -f backend1/Dockerfile.backend1 backend1/
+    - docker push $IMAGE_NAME_BACKEND1:$CI_COMMIT_TAG
 
 build_backend2:
   stage: build
-  image: gcr.io/kaniko-project/executor:v1.9.0-debug
+  image: docker:latest
   script:
-    - /kaniko/executor --context $CI_PROJECT_DIR/backend2 --dockerfile $CI_PROJECT_DIR/backend2/Dockerfile.backend2 --destination $IMAGE_BACKEND2:$CI_COMMIT_REF_SLUG
+    - docker build -t $IMAGE_NAME_BACKEND2:$CI_COMMIT_TAG -f backend2/Dockerfile.backend2 backend2/
+    - docker push $IMAGE_NAME_BACKEND2:$CI_COMMIT_TAG
 
 build_frontend:
   stage: build
-  image: gcr.io/kaniko-project/executor:v1.9.0-debug
+  image: docker:latest
   script:
-    - /kaniko/executor --context $CI_PROJECT_DIR/frontend --dockerfile $CI_PROJECT_DIR/frontend/Dockerfile.frontend --destination $IMAGE_FRONTEND:$CI_COMMIT_REF_SLUG
+    - docker build -t $IMAGE_NAME_FRONTEND:$CI_COMMIT_TAG -f frontend/Dockerfile.frontend frontend/
+    - docker push $IMAGE_NAME_FRONTEND:$CI_COMMIT_TAG
 
-deploy:
+deploy_backend1:
   stage: deploy
   image: docker:latest
-  services:
-    - docker:dind
   script:
-    - echo "Deploying services..."
-    - docker pull $IMAGE_BACKEND1:$CI_COMMIT_REF_SLUG
-    - docker pull $IMAGE_BACKEND2:$CI_COMMIT_REF_SLUG
-    - docker pull $IMAGE_FRONTEND:$CI_COMMIT_REF_SLUG
-    - docker-compose -f docker-compose.yml up -d
-  only:
-    - main
+    - docker run -d --name backend1 --network network1 -e DATABASE_NAME=mydatabase -e DATABASE_USER=myuser -e DATABASE_PASSWORD=mypassword -e DATABASE_HOST=db1 -e DATABASE_PORT=5432 $IMAGE_NAME_BACKEND1:$CI_COMMIT_TAG
+    - docker exec backend1 python manage.py makemigrations
+    - docker exec backend1 python manage.py migrate
+    - docker exec backend1 python manage.py loaddata account/fixtures/account_billingaddress.json
+    - docker exec backend1 python manage.py loaddata account/fixtures/account_ordermodel.json
+    - docker exec backend1 python manage.py loaddata account/fixtures/account_stripemodel.json
+
+deploy_backend2:
+  stage: deploy
+  image: docker:latest
+  script:
+    - docker run -d --name backend2 --network network2 -e DATABASE_NAME=mydatabase -e DATABASE_USER=myuser -e DATABASE_PASSWORD=mypassword -e DATABASE_HOST=db2 -e DATABASE_PORT=5432 $IMAGE_NAME_BACKEND2:$CI_COMMIT_TAG
+    - docker exec backend2 python manage.py makemigrations
+    - docker exec backend2 python manage.py migrate
+    - docker exec backend2 python manage.py loaddata product/fixtures/initial_data.json
+
+deploy_frontend:
+  stage: deploy
+  image: docker:latest
+  script:
+    - docker run -d --name frontend --network network3 -p 3000:3000 $IMAGE_NAME_FRONTEND:$CI_COMMIT_TAG
+
