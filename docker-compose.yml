@@ -32,8 +32,8 @@ services:
       DATABASE_PASSWORD: mypassword
       DATABASE_HOST: db1
       DATABASE_PORT: 5432
-    ports:
-      - "8000:8000"
+    # ports: # FOR DEBUGGING
+    #   - "8000:8000"
     networks:
       - network1
       - network3
@@ -72,8 +72,8 @@ services:
       DATABASE_PASSWORD: mypassword
       DATABASE_HOST: db2
       DATABASE_PORT: 5432
-    ports:
-      - "8001:8000"  # Avoiding port conflict with backend1
+    # ports: # FOR DEBUGGING
+    #   - "8001:8000"  # Avoiding port conflict with backend1
     networks:
       - network2
       - network3
@@ -91,12 +91,27 @@ services:
     restart: always
     ports:
       - "3000:3000"
-    networks: # TO MODIFY
+    networks:
       - network3
     depends_on:
       - backend2  # Ensure the backend starts before the frontend
       - backend1
     command: ["npm", "start", "--", "--host", "0.0.0.0"]  # Run React app
+  
+  nginx:
+    image: nginx:latest
+    container_name: nginx_proxy
+    restart: always
+    ports:
+      - "80:80"
+    networks:
+      - network3
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - backend1
+      - backend2
+      - frontend
 
 volumes:
   postgres_data1:
