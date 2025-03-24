@@ -3,39 +3,44 @@ stages:
   - deploy
 
 variables:
-  IMAGE_NAME_BACKEND1: $CI_REGISTRY_USER/backend1
-  IMAGE_NAME_BACKEND2: $CI_REGISTRY_USER/backend2
-  IMAGE_NAME_FRONTEND: $CI_REGISTRY_USER/frontend
+  IMAGE_BACKEND1: "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/backend1"
+  IMAGE_BACKEND2: "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/backend2"
+  IMAGE_FRONTEND: "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/frontend"
+  IMAGE_DB1: "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/postgres_db1"
+  IMAGE_DB2: "$CI_REGISTRY/$CI_PROJECT_NAMESPACE/postgres_db2"
+
+before_script:
+  - echo "Logging in to GitLab Container Registry"
+  - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
 
 build_backend1:
   stage: build
   image: gcr.io/kaniko-project/executor:v1.9.0-debug
   script:
-    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf\"%s:%s\" \"${CI_REGISTRY_USER}\" \"${CI_REGISTRY_PASSWORD}\" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
-    - /kaniko/executor --context $CI_PROJECT_DIR/backend1 --dockerfile $CI_PROJECT_DIR/backend1/Dockerfile.backend1 --destination $IMAGE_NAME_BACKEND1:$CI_COMMIT_TAG
+    - /kaniko/executor --context $CI_PROJECT_DIR/backend1 --dockerfile $CI_PROJECT_DIR/backend1/Dockerfile.backend1 --destination $IMAGE_BACKEND1:$CI_COMMIT_REF_SLUG
 
 build_backend2:
   stage: build
   image: gcr.io/kaniko-project/executor:v1.9.0-debug
   script:
-    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf\"%s:%s\" \"${CI_REGISTRY_USER}\" \"${CI_REGISTRY_PASSWORD}\" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
-    - /kaniko/executor --context $CI_PROJECT_DIR/backend2 --dockerfile $CI_PROJECT_DIR/backend2/Dockerfile.backend2 --destination $IMAGE_NAME_BACKEND2:$CI_COMMIT_TAG
+    - /kaniko/executor --context $CI_PROJECT_DIR/backend2 --dockerfile $CI_PROJECT_DIR/backend2/Dockerfile.backend2 --destination $IMAGE_BACKEND2:$CI_COMMIT_REF_SLUG
 
 build_frontend:
   stage: build
   image: gcr.io/kaniko-project/executor:v1.9.0-debug
   script:
-    - echo "{\"auths\":{\"${CI_REGISTRY}\":{\"auth\":\"$(printf\"%s:%s\" \"${CI_REGISTRY_USER}\" \"${CI_REGISTRY_PASSWORD}\" | base64 | tr -d '\n')\"}}}" > /kaniko/.docker/config.json
-    - /kaniko/executor --context $CI_PROJECT_DIR/frontend --dockerfile $CI_PROJECT_DIR/frontend/Dockerfile.frontend --destination $IMAGE_NAME_FRONTEND:$CI_COMMIT_TAG
+    - /kaniko/executor --context $CI_PROJECT_DIR/frontend --dockerfile $CI_PROJECT_DIR/frontend/Dockerfile.frontend --destination $IMAGE_FRONTEND:$CI_COMMIT_REF_SLUG
 
 deploy:
   stage: deploy
+  image: docker:latest
+  services:
+    - docker:dind
   script:
-    - echo "$CI_REGISTRY_USER/backend1" > image.txt
-    - echo "$CI_REGISTRY_USER/backend2" >> image.txt
-    - echo "$CI_REGISTRY_USER/frontend" >> image.txt
-  artifacts:
-    paths:
-      - image.txt
+    - echo "Deploying services..."
+    - docker pull $IMAGE_BACKEND1:$CI_COMMIT_REF_SLUG
+    - docker pull $IMAGE_BACKEND2:$CI_COMMIT_REF_SLUG
+    - docker pull $IMAGE_FRONTEND:$CI_COMMIT_REF_SLUG
+    - docker-compose -f docker-compose.yml up -d
   only:
-    - tags
+    - main
