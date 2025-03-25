@@ -13,7 +13,7 @@ services:
   - docker:dind
 
 before_script:
-  - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
+  - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin "$DOCKER_HUB_REGISTRY"
 
 build_backend1:
   stage: build
