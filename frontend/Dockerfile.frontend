@@ -1,6 +1,6 @@
 # Build stage
-# FROM node:18-alpine
-FROM node:latest
+# FROM node:latest
+FROM node:18-alpine
 
 # Set work directory
 #WORKDIR /app
