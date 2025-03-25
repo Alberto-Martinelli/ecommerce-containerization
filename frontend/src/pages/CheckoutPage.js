@@ -35,7 +35,7 @@ const CheckoutPage = ({ match }) => {
     // product details reducer
     const productDetailsReducer = useSelector(state => state.productDetailsReducer)
     const { loading, error, product } = productDetailsReducer
-
+    const fullImageUrl = `http://localhost/backend2/images/${product.image}`;
     // create card reducer
     const createCardReducer = useSelector(state => state.createCardReducer)
     const { error: cardCreationError, success, loading: cardCreationLoading } = createCardReducer
@@ -96,7 +96,7 @@ const CheckoutPage = ({ match }) => {
                                     <Container>
                                         <Row>
                                             <Col>
-                                                <Image src={product.image} alt="image" height="180" />
+                                                <Image src={fullImageUrl} alt="image" height="180" />
                                             </Col>
                                             <Col>
                                                 <h5 className="card-title text-capitalize">

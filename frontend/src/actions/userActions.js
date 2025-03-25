@@ -56,7 +56,7 @@ import axios from 'axios'
 
 // User API (Backend on Port 8000)
 const userAPI = axios.create({
-    baseURL: 'http://localhost/api/backend1',
+    baseURL: 'http://localhost/backend1',
     headers: { 'Content-Type': 'application/json' }
 });
 

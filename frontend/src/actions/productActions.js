@@ -30,7 +30,7 @@ import axios from 'axios'
 
 // Product API (Backend on Port 8001)
 const productAPI = axios.create({
-    baseURL: 'http://localhost/api/backend2',
+    baseURL: 'http://localhost/backend2',
     headers: { 'Content-Type': 'application/json' }
 });
 

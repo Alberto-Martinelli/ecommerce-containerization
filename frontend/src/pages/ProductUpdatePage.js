@@ -14,7 +14,8 @@ const ProductUpdatePage = ({ match }) => {
     // product details reducer
     const productDetailsReducer = useSelector(state => state.productDetailsReducer)
     const { loading: loadingPageDetails, product } = productDetailsReducer
-
+    
+    const fullImageUrl = `http://localhost/backend2/images/${product.image}`;
     // as our errors will be displayed at the top of the webpage
     const scrollToTop = () => {
         window.scrollTo({
@@ -123,7 +124,7 @@ const ProductUpdatePage = ({ match }) => {
                         </b>
                     </Form.Label>
                     <p>
-                        <img src={product.image} alt={product.name} height="200" />
+                        <img src={fullImageUrl} alt={product.name} height="200" />
                     </p>
 
                     {newImage ?

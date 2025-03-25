@@ -21,7 +21,7 @@ import NotFound from './pages/NotFoundPage'
 
 
 const App = () => {
-
+  
   return (
     <div>
       <Router>

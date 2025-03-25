@@ -7,8 +7,11 @@ class ProductSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
 
     def get_image(self, obj):
-        request = self.context.get("request")
-        return request.build_absolute_uri(obj.image.url) if request else obj.image.url
+        """
+        Returns only the image file name instead of the full URL.
+        """
+        return obj.image.name if obj.image else None
+
 
     class Meta:
         model = Product

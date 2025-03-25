@@ -9,6 +9,7 @@ import { CREATE_PRODUCT_RESET, DELETE_PRODUCT_RESET, UPDATE_PRODUCT_RESET, CARD_
 
 function ProductDetailsPage({ history, match }) {
 
+
     const dispatch = useDispatch()
 
     // modal state and functions
@@ -19,6 +20,8 @@ function ProductDetailsPage({ history, match }) {
     // product details reducer
     const productDetailsReducer = useSelector(state => state.productDetailsReducer)
     const { loading, error, product } = productDetailsReducer
+    
+    const fullImageUrl = `http://localhost/backend2/images/${product.image}`;
 
     // login reducer
     const userLoginReducer = useSelector(state => state.userLoginReducer)
@@ -55,7 +58,7 @@ function ProductDetailsPage({ history, match }) {
             type: DELETE_PRODUCT_RESET
         })
     }
-
+    
     return (
         <div>
 
@@ -82,7 +85,7 @@ function ProductDetailsPage({ history, match }) {
             </div>
 
             {/* Modal End */}
-
+            
             {loading && <span style={{ display: "flex" }}>
                 <h5>Getting Product Details</h5>
                 <span className="ml-2">
@@ -95,7 +98,8 @@ function ProductDetailsPage({ history, match }) {
                     <Container>
                         <Row>
                             <Col md={6}>
-                                <Card.Img variant="top" src={product.image} height="420" />
+                                
+                                <Card.Img variant="top" src={fullImageUrl} height="420" />
 
                                 {/* Product edit and delete conditions */}
 
