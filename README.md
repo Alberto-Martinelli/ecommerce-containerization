@@ -1,174 +1,104 @@
-# FullStack_Ecommerce_App
-A FullStack Ecommerce App built with Django and React. 
-<p id ="top" align="center">
-  <img src="https://github.com/YashMarmat/Pages-App-django/blob/master/templates/ecommerce%20%20products%20list%20page.png?raw=true" width="100%">
-</p>
+# E-commerce Platform
 
-Checkout the site in action here <a href="https://condescending-goldstine-79a4ed.netlify.app/">Deployed App</a> (short note below)
+A full-stack e-commerce platform built with Django and React, featuring secure payment processing, user authentication, and a modern shopping experience.
 
-(Note: The website can take upto 30 seconds (hosted on Heroku free tier services), as the project has no clients, its just for learning, please refer the source
-code to run locally).
+## Project Overview
 
-# Table of contents
-- [About_this_App](#About_this_App)
-- [App_Overview](#App_Overview)
-  * [Products_List_Page](#Products_List_Page)
-  * [Product_Details_Page](#Product_Details_Page)
-  * [Product_Edit_Page](#Product_Edit_Page)
-  * [Add_Product_Page](#Add_Product_Page)
-  * [Checkout_Page](#Checkout_Page)
-  * [Payment_Confirmation_Page](#Payment_Confirmation_Page)
-  * [Payment_successfull_Page](#Payment_successfull_Page)
-  * [Orders_Page_For_User](#Orders_Page_For_User)
-  * [Orders_Page_For_Admin](#Orders_Page_For_Admin)
-  * [Address_Settings_Page](#Address_Settings_Page)
-  * [Address_Create_Page](#Address_Create_Page)
-  * [Address_Edit_Page](#Address_Edit_Page)
-  * [Card_Settings_Page](#Card_Settings_Page)
-  * [Card_Update_Page](#Card_Update_Page)
-  * [Login_Page](#Login_Page)
-  * [Register_Page](#Register_Page)
-  * [User_Account_Page](#User_Account_Page)
-  * [Update_User_Account_Page](#Update_User_Account_Page)
-  * [Delete_User_Account_Page](#Delete_User_Account_Page)
-  * [Other_Functionalities](#Other_Functionalities)
-- [Installation](#Installation)
-  * [Backend](#backend)
-  * [Frontend](#frontend)
+This e-commerce platform consists of two main components:
 
-## About_this_App
-An Ecommerce app where users can purchase products by using their stripe card.  Users are allowed to visit our website and free to look any product details. User needs to create an account on our website to proceed with the payment section. If a user want they can also delete their account anytime (NOTE: With the deletion of a user account all their info like Account details, Address details, Card details will be deleted as well)
+### Backend (Django)
+- RESTful API built with Django REST Framework
+- Secure user authentication with JWT
+- PostgreSQL database for data persistence
+- Stripe integration for payment processing
+- Modular architecture with separate apps for products, payments, and user accounts
 
-The website also provides the flexibility to create a new stripe card if they do not have one, the user can also pay with other user stripe card (if they provide the right email address linked with the card and other card details like Card Number, Exp Month, Exp Year and CVC). The user can also detete their stripe card if they like (Caution: With the deletion of their stripe card their account related to that card will also be deleted as well). 
+### Frontend (React)
+- Modern, responsive UI built with React
+- Redux for state management
+- Secure payment integration with Stripe
+- Real-time updates with hot reloading
+- User-friendly shopping experience
 
-## App_Overview
-### Products_List_Page
-This page displays all the available products on the website.
-<p align="center">
-  <img src="https://github.com/YashMarmat/Pages-App-django/blob/master/templates/ecommerce%20%20products%20list%20page.png?raw=true" width="100%">
-</p>
+## Prerequisites
+- Docker and Docker Compose
+- Node.js (for local frontend development)
+- Python 3.11 (for local backend development)
 
-### Product_Details_Page
-This page displays the details of the Product which user has selected from the products list page. Here, the user can see all the info of the Product such as product name, description, in stock or out of stock and pay with stripe button. For Admins, the website provides two more functionalities such as Updating the product and secondly deleting the product.
-<p align="center">
-  <img src="https://github.com/YashMarmat/Pages-App-django/blob/master/templates/ecommerce%20%20product%20details%20page.png?raw=true" width="100%">
-</p>
+## Quick Start
 
-### Product_Edit_Page
-Only admins can visit this page, the page handles the editing of the Product in terms of image, name , description, price and in stock status. 
-<p align="center">
-  <img src="https://github.com/YashMarmat/Pages-App-django/blob/master/templates/ecommerce%20%20product%20edit%20page.png?raw=true" width="100%">
-</p>
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd <repository-name>
+```
 
-### Add_Product_Page
-Only admins can visit this page, the pages handles the creation of product (requires product name,  image, description, price and in stock status.
-<p align="center">
-  <img src="https://github.com/YashMarmat/Pages-App-django/blob/master/templates/ecommerce%20%20add%20product%20page.png?raw=true" width="100%">
-</p>
+2. Start the application using Docker:
+```bash
+docker-compose up --build
+```
 
-### Checkout_Page
-This page displays the info of the product which user has selected for the purchase. The page Contains the product information and provides pay with stripe card
-option. The user can also save their card for future payments. The user can also select or edit their address from the page.
+The application will be available at:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:8000
+- Admin Interface: http://localhost:8000/admin
 
-<p align="center">
-  <img src="https://github.com/YashMarmat/Pages-App-django/blob/master/templates/ecommerce%20%20checkout%20page.png?raw=true" width="100%">
-</p>
+## Development Setup
 
-### Payment_Confirmation_Page
-The page displays total amount info, the address selected by the user for delivery and the card number used for the purchase. The user can also select a different card and
-address from the same page if something wents wrong.
+### Backend Development
+1. Navigate to the backend directory:
+```bash
+cd backend
+```
 
-<p align="center">
-  <img src="https://github.com/YashMarmat/Pages-App-django/blob/master/templates/ecommerce%20%20payment%20confirmation%20page.png?raw=true" width="100%">
-</p>
+2. Create and activate a virtual environment:
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
 
-### Payment_Successfull_Page
-The Page displays the confirmation of the product purchase. Also, provides info like which product is bought and how much amount was paid for it. Go to orders page is
-also provided to see the order details.
+3. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
 
-<p align="center">
-  <img src="https://github.com/YashMarmat/Pages-App-django/blob/master/templates/ecommerce%20%20payment%20successfull%20page.png?raw=true" width="100%">
-</p>
+4. Run migrations:
+```bash
+python manage.py migrate
+```
 
-### Orders_Page_For_User
-The page displays the list of all the orders made by user, with the details like their name, card number used, date of purchase, address etc.
+5. Start the development server:
+```bash
+python manage.py runserver
+```
 
-<p align="center">
-  <img src="https://github.com/YashMarmat/Pages-App-django/blob/master/templates/ecommerce%20%20orders%20page%20for%20normal%20user.png?raw=true" width="100%">
-</p>
+### Frontend Development
+1. Navigate to the frontend directory:
+```bash
+cd frontend
+```
 
-### Orders_Page_For_Admin
-For admin user the page display the list of all users order information. The admin can change the status of product delivery status as well. A search bar is also
-provided to locate the orders with more flexibility (can search the orders by customer name, address and product name)
+2. Install dependencies:
+```bash
+npm install
+```
 
-<p align="center">
-  <img src="https://github.com/YashMarmat/Pages-App-django/blob/master/templates/ecommerce%20%20orders%20page%20for%20admin.png?raw=true" width="100%">
-</p>
+3. Start the development server:
+```bash
+npm start
+```
 
-### Address_Settings_Page
-Here, the user can view their addresses, the page also provides creation of new address and can edit or delete it as well.
-<p align="center">
-  <img src="https://github.com/YashMarmat/Pages-App-django/blob/master/templates/ecommerce%20%20address%20settings%20page.png?raw=true" width="100%">
-</p>
-
-### Address_Create_Page
-Here, the user can create their new address.
-<p align="center">
-  <img src="https://github.com/YashMarmat/Pages-App-django/blob/master/templates/ecommerce%20%20address%20create%20page.png?raw=true" width="50%">
-</p>
-
-### Address_Edit_Page
-Here, the user can edit their address.
-<p align="center">
-  <img src="https://github.com/YashMarmat/Pages-App-django/blob/master/templates/ecommerce%20%20address%20update%20page.png?raw=true" width="50%">
-</p>
-
-### Card_Settings_Page
-Here, the user can view all their card details. The Page also provides updation and deletion of Card.
-<p align="center">
-  <img src="https://github.com/YashMarmat/Pages-App-django/blob/master/templates/ecommerce%20%20card%20settings%20page.png?raw=true" width="100%">
-</p>
-
-
-### Card_Update_Page
-Here, the user can update their card.
-<p align="center">
-  <img src="https://github.com/YashMarmat/Pages-App-django/blob/master/templates/ecommerce%20%20card%20update%20page.png?raw=true" width="50%">
-</p>
-
-### Login_Page
-Requires an Account on the Website
-<p align="center">
-  <img src="https://github.com/YashMarmat/Pages-App-django/blob/master/templates/ecommerce%20%20sign%20in%20page.png?raw=true" width="100%">
-</p>
-
-### Register_Page
-<p align="center">
-  <img src="https://github.com/YashMarmat/Pages-App-django/blob/master/templates/ecommerce%20%20sign%20up%20page.png?raw=true" width="100%">
-</p>
-
-### User_Account_Page
-Here, the user can see their details like their Name, Email and Admin Priviledges.
-<p align="center">
-  <img src="https://github.com/YashMarmat/Pages-App-django/blob/master/templates/ecommerce%20%20user%20account%20page.png?raw=true" width="100%">
-</p>
-
-### Update_User_Account_Page
-Here, the user can update their account details like username, email and can also reset their password.
-<p align="center">
-  <img src="https://github.com/YashMarmat/Pages-App-django/blob/master/templates/ecommerce%20account%20update%20page.png?raw=true" width="100%">
-</p>
-
-### Delete_User_Account_Page
-Here, the user can Delete their account (requires password confirmation)
-<p align="center">
-  <img src="https://github.com/YashMarmat/Pages-App-django/blob/master/templates/ecommerce%20%20delete%20account%20page.png?raw=true" width="100%">
-</p>
-
-### Other_Functionalities
-- Used JSON web tokens to achieve the authentication checks in the website.
-- Strict Security Checking behind the scenes during the Card Creation and Payment Process.
-- JSON Token gets checked for every single request made on the website (except products list and product details page)
+## Features
+- User authentication and authorization
+- Product catalog with categories
+- Shopping cart functionality
+- Secure payment processing with Stripe
+- Order management
+- Admin dashboard
+- Responsive design
+- Real-time updates
+- Data persistence
+- Containerized deployment
 
 ## Installation
 after downloading/cloning the repository code follow below steps:
@@ -193,6 +123,89 @@ after downloading/cloning the repository code follow below steps:
 `npm i`
 
 `npm start`
+
+## Docker Setup
+
+To run the application using Docker:
+
+1. Make sure Docker and Docker Compose are installed on your system
+2. Navigate to the project root directory
+3. Run the following command to build and start all containers:
+```bash
+docker-compose up --build
+```
+
+This will:
+- Build and start the frontend container (accessible at http://localhost:3000)
+  - Includes hot reloading support - changes to frontend code will automatically update in the browser
+- Build and start the backend container (accessible at http://localhost:8000)
+- Start the PostgreSQL database container
+- Set up the necessary networks between containers
+- Create and mount persistent volumes for data storage
+
+To stop the containers:
+```bash
+docker-compose down
+```
+
+Note: The first build might take a few minutes as it needs to download and build all dependencies.
+
+### Development Features
+- **Hot Reloading**: The frontend container is configured with hot reloading enabled. Any changes you make to the React code will be immediately reflected in the browser without needing to rebuild or restart the container.
+- **Volume Mounting**: The frontend source code is mounted as a volume, ensuring that your local changes are immediately synced with the container.
+- **Development Mode**: The frontend runs in development mode with all React development tools and features available.
+
+### Persistent Data Storage
+The application uses Docker volumes to ensure data persistence across container restarts:
+
+**Frontend Volumes:**
+- `frontend_build`: Persists the built React application
+
+**Backend Volumes:**
+- `backend_data`: Stores application data
+- `backend_media`: Stores user-uploaded media files
+- `backend_static`: Stores static files
+
+**Database Volumes:**
+- `postgres_data`: Stores PostgreSQL database files
+- `postgres_backup`: Stores database backups
+
+These volumes ensure that:
+- All data persists even if containers are stopped or removed
+- Each service has its own isolated storage
+- User uploads and media files are preserved
+- Database data and backups are maintained
+
+## CI/CD Pipeline
+
+This project includes a comprehensive CI/CD pipeline using GitHub Actions. The pipeline includes:
+
+### Security Checks
+- Static Application Security Testing (SAST) for Dockerfiles using Hadolint
+- Vulnerability scanning using Trivy
+- Security best practices enforcement during builds
+
+### Automated Testing
+- Backend tests using Django's test framework
+- Frontend tests using React Testing Library
+- All tests must pass before deployment
+
+### Continuous Deployment
+- Automatic building of Docker images
+- Push to Docker Hub on successful builds
+- Deployment to production environment (when configured)
+
+### Setting up Docker Hub Integration
+1. Create a Docker Hub account if you don't have one
+2. In your GitHub repository settings, add these secrets:
+   - `DOCKERHUB_USERNAME`: Your Docker Hub username
+   - `DOCKERHUB_TOKEN`: Your Docker Hub access token
+
+The pipeline runs on:
+- Every push to main and develop branches
+- Every pull request to these branches
+
+Images are pushed to Docker Hub only on successful merges to the main branch.
 
 ## All set ! Happy coding :)
 
