@@ -40,8 +40,6 @@ docker-compose up --build
 
 The application will be available at:
 - Frontend: http://localhost:3000
-- Backend API: http://localhost:8000
-- Admin Interface: http://localhost:8000/admin
 
 ## Development Setup
 
