@@ -1,6 +1,8 @@
 # E-commerce Platform
 
-A full-stack e-commerce platform built with Django and React, featuring secure payment processing, user authentication, and a modern shopping experience.
+A full-stack e-commerce platform built with Django and React, featuring secure payment processing, user authentication, and a modern shopping experience. This project was realized as an exercise to to test the knowledge regarding microservices, CI/CD, data persistance (through docker volumes), hot reloading and load balancing. The following is a schema describing the project's architecture:
+
+![Alt text](architecture.png)
 
 ## Project Overview
 
